@@ -12,6 +12,7 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import { propertyService } from '../../services/propertyService';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { uploadImageToCloudinary } from './ListPropertyScreen';
 
 const EditPropertyScreen = ({ route, navigation }: any) => {
   const { propertyId } = route.params;
@@ -19,8 +20,8 @@ const EditPropertyScreen = ({ route, navigation }: any) => {
     title: '',
     description: '',
     price: '',
-    location: '',
-    imageUrl: '',
+    address: '',
+    images: [''],
   });
   const [newImage, setNewImage] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -34,8 +35,8 @@ const EditPropertyScreen = ({ route, navigation }: any) => {
             title: data.title,
             description: data.description,
             price: data.price.toString(),
-            location: data.location,
-            imageUrl: data.imageUrl || '',
+            address: data.address,
+            images: data.images || [''],
           });
         } else {
           Alert.alert('Error', 'Property not found.');
@@ -60,29 +61,6 @@ const EditPropertyScreen = ({ route, navigation }: any) => {
     }
   };
 
-  const uploadImage = async (uri: string): Promise<string> => {
-    try {
-      const formData = new FormData();
-      formData.append('file', {
-        uri,
-        type: 'image/jpeg',
-        name: 'upload.jpg',
-      } as any);
-      formData.append('upload_preset', 'renthub_preset');
-
-      const response = await fetch('https://api.cloudinary.com/v1_1/your-cloud-name/image/upload', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const data = await response.json();
-      return data.secure_url;
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      throw error;
-    }
-  };
-
   const deleteOldImage = async () => {
     // With Cloudinary, we don't need to manually delete old images
     // They can be managed through the Cloudinary dashboard or
@@ -91,9 +69,9 @@ const EditPropertyScreen = ({ route, navigation }: any) => {
   };
 
   const handleUpdate = async () => {
-    const { title, description, price, location } = property;
+    const { title, description, price, address } = property;
 
-    if (!title || !description || !price || !location) {
+    if (!title || !description || !price || !address) {
       Alert.alert('Validation Error', 'Please fill all fields.');
       return;
     }
@@ -101,16 +79,16 @@ const EditPropertyScreen = ({ route, navigation }: any) => {
     try {
       setUploading(true);
 
-      let updatedImageUrl = property.imageUrl;
+      let updatedImageUrl = property.images[0];
       if (newImage) {
         await deleteOldImage();
-        updatedImageUrl = await uploadImage(newImage);
+        updatedImageUrl = await uploadImageToCloudinary(newImage);
       }
 
       await propertyService.updateProperty(propertyId, {
         ...property,
         price: parseFloat(price),
-        imageUrl: updatedImageUrl,
+        images: [updatedImageUrl],
       });
 
       Alert.alert('Success', 'Property updated.');
@@ -185,9 +163,9 @@ const EditPropertyScreen = ({ route, navigation }: any) => {
               <TextInput
                 style={styles.input}
                 placeholder="Location"
-                value={property.location}
+                value={property.address}
                 onChangeText={(text) =>
-                  setProperty({ ...property, location: text })
+                  setProperty({ ...property, address: text })
                 }
               />
             </View>
@@ -197,9 +175,9 @@ const EditPropertyScreen = ({ route, navigation }: any) => {
             <Text style={styles.buttonText}>Choose New Image</Text>
           </TouchableOpacity>
 
-          {(property.imageUrl || newImage) && (
+          {(property.images[0] || newImage) && (
             <Image
-              source={{ uri: newImage || property.imageUrl }}
+              source={{ uri: newImage || property.images[0] }}
               style={styles.imagePreview}
             />
           )}

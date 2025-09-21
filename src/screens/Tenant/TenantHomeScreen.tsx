@@ -54,7 +54,7 @@ const TenantHomeScreen = () => {
           ),
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Map Screen"
         component={MapScreen}
         options={{
@@ -62,7 +62,7 @@ const TenantHomeScreen = () => {
             <Icon name="map" size={size} color={color} />
           ),
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Shortlist"
         component={ShortlistScreen}

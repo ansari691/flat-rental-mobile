@@ -13,7 +13,7 @@ import { userAuthentication } from '../../config/userAuthentication';
 import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-const MyRequestsScreen = () => {
+const MyRequestsScreen = ({ navigation }: any) => {
   const [requests, setRequests] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const { user } = userAuthentication();
@@ -65,12 +65,12 @@ const MyRequestsScreen = () => {
   };
 
   const RequestItem = ({ item }: { item: any }) => (
-    <TouchableOpacity style={styles.requestCard} activeOpacity={0.95}>
+    <TouchableOpacity onPress={() => navigation.navigate('PropertyDetailScreen', { propertyId: item.propertyId._id })} style={styles.requestCard} activeOpacity={0.95}>
       <View style={styles.cardHeader}>
         <View style={styles.propertyTitleContainer}>
           <Icon name="home" size={20} color="#A4303F" />
           <Text style={styles.propertyTitle} numberOfLines={2}>
-            {item.propertyTitle || 'Unknown Property'}
+            {item.propertyId.title || 'Unknown Property'}
           </Text>
         </View>
         <View
@@ -85,7 +85,7 @@ const MyRequestsScreen = () => {
       </View>
 
       <View style={styles.cardContent}>
-        <View style={styles.detailRow}>
+        {/* <View style={styles.detailRow}>
           <Icon name="phone" size={18} color="#6B7280" />
           <Text style={styles.detailText}>{item.tenantPhone}</Text>
         </View>
@@ -95,7 +95,7 @@ const MyRequestsScreen = () => {
           <Text style={styles.detailText} numberOfLines={1}>
             {item.tenantEmail}
           </Text>
-        </View>
+        </View> */}
 
         <View style={styles.messageContainer}>
           <Icon name="message" size={18} color="#6B7280" />
@@ -104,12 +104,12 @@ const MyRequestsScreen = () => {
           </Text>
         </View>
 
-        {item.sentAt && (
+        {item.createdAt && (
           <View style={styles.dateContainer}>
             <Icon name="schedule" size={16} color="#9CA3AF" />
             <Text style={styles.dateText}>
               Sent on{' '}
-              {new Date(item.sentAt.seconds * 1000).toLocaleDateString()}
+              {new Date(item.createdAt).toLocaleString()}
             </Text>
           </View>
         )}
@@ -147,7 +147,7 @@ const MyRequestsScreen = () => {
 
       <FlatList
         data={requests}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item._id}
         renderItem={RequestItem}
         ListEmptyComponent={EmptyState}
         showsVerticalScrollIndicator={false}

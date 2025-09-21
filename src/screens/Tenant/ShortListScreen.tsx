@@ -74,7 +74,7 @@ const ShortlistScreen: React.FC<NativeStackScreenProps<any>> = ({
             try {
               await shortlistService.removeFromShortlist(propertyId);
               setShortlistedProperties((prev) =>
-                prev.filter((property) => property.id !== propertyId)
+                prev.filter((property) => property._id !== propertyId)
               );
 
               Alert.alert('Success', 'Property removed from your shortlist');
@@ -92,14 +92,14 @@ const ShortlistScreen: React.FC<NativeStackScreenProps<any>> = ({
     <TouchableOpacity
       style={styles.propertyCard}
       onPress={() =>
-        navigation.navigate('PropertyDetailScreen', { property: item })
+        navigation.navigate('PropertyDetailScreen', { propertyId: item._id })
       }
       activeOpacity={0.95}
     >
       <View style={styles.imageContainer}>
-        {item.imageUrl ? (
+        {item.images[0] ? (
           <Image
-            source={{ uri: item.imageUrl }}
+            source={{ uri: item.images[0] }}
             style={styles.propertyImage}
             resizeMode="cover"
           />
@@ -123,14 +123,14 @@ const ShortlistScreen: React.FC<NativeStackScreenProps<any>> = ({
           <View style={styles.locationContainer}>
             <Icon name="place" size={18} color="#A4303F" />
             <Text style={styles.locationText} numberOfLines={1}>
-              {item.location}
+              {item.address}
             </Text>
           </View>
         </View>
         <View>
           <TouchableOpacity
             style={styles.removeButton}
-            onPress={() => handleRemove(item.id)}
+            onPress={() => handleRemove(item._id)}
           >
             <Icon name="delete-outline" size={25} color="#A4303F" />
           </TouchableOpacity>
@@ -198,7 +198,7 @@ const ShortlistScreen: React.FC<NativeStackScreenProps<any>> = ({
 
       <FlatList
         data={shortlistedProperties}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item._id}
         renderItem={PropertyItem}
         ListEmptyComponent={EmptyState}
         showsVerticalScrollIndicator={false}

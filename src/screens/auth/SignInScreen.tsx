@@ -37,7 +37,8 @@ const SignInScreen: React.FC<NativeStackScreenProps<any>> = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.appTitle}>Welcome to RentHub</Text>
+      <Text style={[styles.appTitle, { marginBottom: 0}]}>Flat Finder</Text>
+      <Text style={{ textAlign: 'center', marginBottom: 100 }}>Find nearby rental flats</Text>
       <Text style={styles.subtitle}>Sign in to your account</Text>
 
       <TextInput

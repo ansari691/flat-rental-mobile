@@ -19,7 +19,6 @@ const RootNavigation = () => {
     const initializeApp = async () => {
       try {
         await loadUser();
-        console.log("User loaded:", user);
         if(!user) {
           setLoading(false);
         }

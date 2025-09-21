@@ -15,6 +15,40 @@ import { userAuthentication } from '../../config/userAuthentication';
 import { propertyService } from '../../services/propertyService';
 import Icon from 'react-native-vector-icons/Ionicons';
 
+export const uploadImageToCloudinary = async (uri: string) => {
+  
+    try {
+      // For iOS, we need to prepend 'file://' to the URI
+      const formData = new FormData();
+      const file = {
+        uri: Platform.OS === 'ios' ? `file://${uri}` : uri,
+        type: 'image/jpeg',
+        name: 'upload.jpg',
+      } as unknown as Blob;
+      
+      formData.append('file', file);
+      formData.append('upload_preset', process.env.EXPO_PUBLIC_CLOUDINARY_UPLOAD_PRESET); // Create this in Cloudinary dashboard
+      
+      const response = await fetch(
+        process.env.EXPO_PUBLIC_CLOUDINARY_URL,
+        {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+    const data = await response.json();
+    return data.secure_url;
+  } catch (error) {
+    console.error('Upload failed:', error);
+    throw error;
+  }
+};
+
 const ListPropertyScreen = () => {
   const { user } = userAuthentication();
   const [imageUri, setImageUri] = useState<string | null>(null);
@@ -39,41 +73,6 @@ const ListPropertyScreen = () => {
       setImageUri(result.assets[0].uri);
     }
   };
-
-  // We'll use only Cloudinary for image upload
-
-  const uploadImageToCloudinary = async (uri: string) => {
-    try {
-      // For iOS, we need to prepend 'file://' to the URI
-      const formData = new FormData();
-      const file = {
-        uri: Platform.OS === 'ios' ? `file://${uri}` : uri,
-        type: 'image/jpeg',
-        name: 'upload.jpg',
-      } as unknown as Blob;
-      
-      formData.append('file', file);
-      formData.append('upload_preset', 'gpkssnm5'); // Create this in Cloudinary dashboard
-      
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/dsikcbogx/image/upload`,
-        {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-
-    const data = await response.json();
-    return data.secure_url;
-  } catch (error) {
-    console.error('Upload failed:', error);
-    throw error;
-  }
-};
 
   const handleListProperty = async () => {
     const { title, description, price, location } = property;
@@ -161,7 +160,7 @@ const ListPropertyScreen = () => {
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Title</Text>
+            <Text style={styles.label}>Price</Text>
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}
@@ -176,7 +175,7 @@ const ListPropertyScreen = () => {
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Title</Text>
+            <Text style={styles.label}>Location</Text>
             <View style={styles.inputContainer}>
               <TextInput
                 style={styles.input}

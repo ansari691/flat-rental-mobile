@@ -52,7 +52,7 @@ const SignUpScreen: React.FC<NativeStackScreenProps<any>> = ({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.appTitle}>Welcome to RentHub</Text>
+      <Text style={[styles.appTitle, { marginBottom: 0 }]}>Flat Finder</Text>
       <Text style={styles.subtitle}>Create a new account</Text>
 
       <TextInput

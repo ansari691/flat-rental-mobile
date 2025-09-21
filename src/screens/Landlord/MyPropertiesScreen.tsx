@@ -30,7 +30,7 @@ interface Property {
   type?: string;
   images?: string[];
   owner?: string;
-  isActive: boolean;
+  available: boolean;
 }
 
 interface User {
@@ -51,7 +51,6 @@ const MyPropertiesScreen: React.FC<NativeStackScreenProps<any>> = ({
   const fetchProperties = async () => {
     try {
       const properties = await propertyService.getLandlordProperties();
-      console.log('Fetched properties:', JSON.stringify(properties, null, 2));
       setProperties(properties);
     } catch (error) {
       console.error('Error fetching properties:', error);
@@ -62,7 +61,7 @@ const MyPropertiesScreen: React.FC<NativeStackScreenProps<any>> = ({
   const toggleIsActive = async (propertyId: string, currentStatus: boolean) => {
     try {
       await propertyService.updateProperty(propertyId, {
-        isActive: !currentStatus
+        available: !currentStatus
       });
       fetchProperties();
       Alert.alert(
@@ -120,7 +119,7 @@ const MyPropertiesScreen: React.FC<NativeStackScreenProps<any>> = ({
         )}
         <View style={styles.imageOverlay} />
         <View style={styles.priceTag}>
-          <Text style={styles.priceText}>${item.price}</Text>
+          <Text style={styles.priceText}>₹{item.price}</Text>
         </View>
       </View>
 
@@ -148,13 +147,13 @@ const MyPropertiesScreen: React.FC<NativeStackScreenProps<any>> = ({
 
         <View style={styles.toggleRow}>
           <Text style={styles.statusText}>
-            {item.isActive ? 'Active' : 'Inactive'}
+            {item.available ? 'Active' : 'Inactive'}
           </Text>
           <Switch
-            value={item.isActive}
-            onValueChange={() => toggleIsActive(item._id, item.isActive)}
+            value={item.available}
+            onValueChange={() => toggleIsActive(item._id, item.available)}
             trackColor={{ false: '#D1D5DB', true: '#C2C5BB' }}
-            thumbColor={item.isActive ? '#88AB75' : '#F4F3F4'}
+            thumbColor={item.available ? '#88AB75' : '#F4F3F4'}
           />
         </View>
       </View>

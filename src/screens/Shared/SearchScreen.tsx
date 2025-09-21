@@ -146,7 +146,7 @@ const SearchScreen: React.FC<NativeStackScreenProps<any>> = ({
 
       <FlatList
         data={filteredProperties}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item._id}
         renderItem={renderProperty}
         ListEmptyComponent={renderEmptyState}
         showsVerticalScrollIndicator={false}

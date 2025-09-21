@@ -8,7 +8,7 @@ export const shortlistService = {
       method: 'POST',
       headers: getHeaders(token),
     });
-    return handleResponse(response);
+    return response.status === 201;
   },
 
   async removeFromShortlist(propertyId: string) {

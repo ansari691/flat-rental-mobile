@@ -100,7 +100,7 @@ const ViewRequestsScreen = () => {
               <View style={styles.propertyTitleContainer}>
                 <Icon name="home" size={20} color="#A4303F" />
                 <Text style={styles.propertyTitle} numberOfLines={2}>
-                  {item.propertyTitle || 'Unknown Property'}
+                  {item.propertyId.title || 'Unknown Property'}
                 </Text>
               </View>
               <View
@@ -123,13 +123,13 @@ const ViewRequestsScreen = () => {
             <View style={styles.cardContent}>
               <View style={styles.detailRow}>
                 <Icon name="phone" size={18} color="#6B7280" />
-                <Text style={styles.detailText}>{item.tenantPhone}</Text>
+                <Text style={styles.detailText}>{item.tenantId?.phoneNumber}</Text>
               </View>
 
               <View style={styles.detailRow}>
                 <Icon name="email" size={18} color="#6B7280" />
                 <Text style={styles.detailText} numberOfLines={1}>
-                  {item.tenantEmail}
+                  {item.tenantId?.email}
                 </Text>
               </View>
 
@@ -140,12 +140,12 @@ const ViewRequestsScreen = () => {
                 </Text>
               </View>
 
-              {item.sentAt && (
+              {item.createdAt && (
                 <View style={styles.dateContainer}>
                   <Icon name="schedule" size={16} color="#9CA3AF" />
                   <Text style={styles.dateText}>
                     Received on{' '}
-                    {new Date(item.sentAt.seconds * 1000).toLocaleDateString()}
+                    {new Date(item.createdAt).toLocaleString()}
                   </Text>
                 </View>
               )}
@@ -153,13 +153,13 @@ const ViewRequestsScreen = () => {
                 <View style={styles.actionRow}>
                   <TouchableOpacity
                     style={styles.approveButton}
-                    onPress={() => handleStatusUpdate(item.id, 'approved')}
+                    onPress={() => handleStatusUpdate(item._id, 'approved')}
                   >
                     <Text style={styles.approveText}>Approve</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     style={styles.denyButton}
-                    onPress={() => handleStatusUpdate(item.id, 'denied')}
+                    onPress={() => handleStatusUpdate(item._id, 'rejected')}
                   >
                     <Text style={styles.denyText}>Deny</Text>
                   </TouchableOpacity>
@@ -193,7 +193,7 @@ const ViewRequestsScreen = () => {
       ) : (
         <FlatList
           data={requests}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item._id}
           renderItem={renderItem}
           ListEmptyComponent={EmptyState}
           showsVerticalScrollIndicator={false}

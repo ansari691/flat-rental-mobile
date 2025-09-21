@@ -28,7 +28,7 @@ const RequestScreen = ({ route, navigation }: any) => {
   }, [userData]);
 
   const validateFields = () => {
-    if (!fullName.trim() || !phone.trim() || !message.trim()) {
+    if (!message.trim()) {
       Alert.alert('Missing Info', 'Please fill in all the fields.');
       return false;
     }
@@ -75,15 +75,15 @@ const RequestScreen = ({ route, navigation }: any) => {
         contentContainerStyle={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.headerContainer}>
+        {/* <View style={styles.headerContainer}>
           <Icon name="send" size={32} color="#A4303F" />
           <Text style={styles.subtitle}>
             Fill in your details to send a request for this property
           </Text>
-        </View>
+        </View> */}
 
         <View style={styles.formContainer}>
-          <View style={styles.inputGroup}>
+          {/* <View style={styles.inputGroup}>
             <Text style={styles.label}>Full Name</Text>
             <View style={styles.inputContainer}>
               <Icon name="person" size={20} color="#6B7280" />
@@ -95,9 +95,9 @@ const RequestScreen = ({ route, navigation }: any) => {
                 placeholderTextColor="#9CA3AF"
               />
             </View>
-          </View>
+          </View> */}
 
-          <View style={styles.inputGroup}>
+          {/* <View style={styles.inputGroup}>
             <Text style={styles.label}>Phone Number</Text>
             <View style={styles.inputContainer}>
               <Icon name="phone" size={20} color="#6B7280" />
@@ -110,7 +110,7 @@ const RequestScreen = ({ route, navigation }: any) => {
                 keyboardType="phone-pad"
               />
             </View>
-          </View>
+          </View> */}
 
           <View style={styles.inputGroup}>
             <Text style={styles.label}>Message to Landlord</Text>
